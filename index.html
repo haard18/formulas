@@ -1,244 +1,990 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Poly-Anal Scoring System Explained</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLY-ANAL SCORING SYSTEM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111111;
+            --white: #ffffff;
+            --gray: #666666;
+            --light-gray: #cccccc;
+            --border: 4px solid var(--white);
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--dark-bg);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--black);
+            border: var(--border);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 8px 8px 0 var(--white);
+            position: relative;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--card-bg);
+            border: var(--border);
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 8px 8px 0 var(--white);
+        }
+
+        nav h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav li {
+            margin: 10px 0;
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: inline-block;
+            padding: 5px 10px;
+            border: 2px solid transparent;
+        }
+
+        nav a:hover {
+            border: 2px solid var(--white);
+            background: var(--white);
+            color: var(--black);
+            transform: translateX(10px);
+        }
+
+        /* Sections */
+        section {
+            background: var(--card-bg);
+            border: var(--border);
+            padding: 40px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        section:nth-child(even) {
+            box-shadow: -8px 8px 0 var(--white);
+        }
+
+        section:nth-child(odd) {
+            box-shadow: 8px 8px 0 var(--gray);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            color: var(--white);
+            border-bottom: 4px solid var(--white);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 30px 0 20px;
+            color: var(--white);
+        }
+
+        h4 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin: 20px 0 15px;
+            color: var(--light-gray);
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* Highlight boxes */
+        .highlight {
+            background: var(--black);
+            border: 3px solid var(--white);
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .highlight::before {
+            content: '→';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        /* Formula boxes */
+        .formula {
+            background: var(--black);
+            border: 4px solid var(--white);
+            padding: 30px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+            box-shadow: 6px 6px 0 var(--gray);
+        }
+
+        .formula code {
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        /* Score cards */
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .score-card {
+            background: var(--black);
+            border: 4px solid var(--white);
+            padding: 30px;
+            position: relative;
+        }
+
+        .score-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--white);
+            display: block;
+            margin: 20px 0;
+        }
+
+        .weight {
+            background: var(--white);
+            color: var(--black);
+            padding: 5px 15px;
+            display: inline-block;
+            font-weight: 900;
+            margin-top: 10px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 30px 0;
+            border: 4px solid var(--white);
+        }
+
+        th {
+            background: var(--black);
+            color: var(--white);
+            padding: 20px;
+            text-align: left;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-bottom: 4px solid var(--white);
+        }
+
+        td {
+            background: var(--card-bg);
+            padding: 20px;
+            border-bottom: 2px solid var(--white);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        /* Examples */
+        .example {
+            background: var(--black);
+            border-left: 8px solid var(--white);
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .example h4 {
+            color: var(--white);
+            margin-top: 0;
+        }
+
+        /* Classification badges */
+        .badge {
+            display: inline-block;
+            padding: 10px 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 5px;
+            border: 3px solid;
+        }
+
+        .badge-alpha {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
+
+        .badge-risky {
+            background: var(--gray);
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .badge-watch {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .badge-avoid {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        /* Flags */
+        .flag {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            border: 2px solid;
+            font-size: 0.9rem;
+        }
+
+        .flag-red {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .flag-yellow {
+            border-color: var(--gray);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+
+            header, section, nav {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--white);
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+    </style>
 </head>
 <body>
+    <div class="scroll-indicator" id="scrollIndicator"></div>
 
-<h1>🎯 Poly-Anal Scoring System Explained</h1>
-<p><strong>A complete guide to how we evaluate prediction market traders</strong></p>
+    <div class="container">
+        <header>
+            <h1>POLY-ANAL SCORING SYSTEM</h1>
+            <p class="subtitle">A Complete Guide to Evaluating Prediction Market Traders</p>
+        </header>
 
-<hr />
+        <nav>
+            <h2>// NAVIGATION</h2>
+            <ul>
+                <li><a href="#overview">01. OVERVIEW</a></li>
+                <li><a href="#composite">02. COMPOSITE SCORE</a></li>
+                <li><a href="#skill">03. SKILL SCORE (50%)</a></li>
+                <li><a href="#risk">04. RISK SCORE (15%)</a></li>
+                <li><a href="#bot">05. BOT DETECTION (15%)</a></li>
+                <li><a href="#legitimacy">06. LEGITIMACY (20%)</a></li>
+                <li><a href="#classification">07. CLASSIFICATION SYSTEM</a></li>
+                <li><a href="#flags">08. FLAGS & WARNINGS</a></li>
+                <li><a href="#examples">09. PRACTICAL EXAMPLES</a></li>
+            </ul>
+        </nav>
 
-<h2>Table of Contents</h2>
-<ol>
-  <li><a href="#overview">Overview</a></li>
-  <li><a href="#composite-score">The Composite Score</a></li>
-  <li><a href="#component-scores">Component Scores</a></li>
-  <li><a href="#classification-system">Classification System</a></li>
-  <li><a href="#flags-warnings">Flags &amp; Warnings</a></li>
-  <li><a href="#behavioral-traits">Behavioral Traits</a></li>
-</ol>
+        <section id="overview">
+            <h2>// OVERVIEW</h2>
+            
+            <h3>What Are We Measuring?</h3>
+            <div class="score-grid">
+                <div class="score-card">
+                    <h4>SKILL</h4>
+                    <span class="score-value">50%</span>
+                    <p>How good are they at predicting outcomes?</p>
+                    <span class="weight">PRIMARY WEIGHT</span>
+                </div>
+                <div class="score-card">
+                    <h4>RISK MANAGEMENT</h4>
+                    <span class="score-value">15%</span>
+                    <p>Do they manage their money wisely?</p>
+                </div>
+                <div class="score-card">
+                    <h4>BOT DETECTION</h4>
+                    <span class="score-value">15%</span>
+                    <p>Is this a human trader or automated bot?</p>
+                </div>
+                <div class="score-card">
+                    <h4>LEGITIMACY</h4>
+                    <span class="score-value">20%</span>
+                    <p>Is their track record trustworthy?</p>
+                </div>
+            </div>
 
-<hr />
+            <div class="highlight">
+                <h3>PHILOSOPHY: WE PRIORITIZE WINNERS</h3>
+                <p>If someone is consistently winning, we care less about their risk style. The scoring reflects this philosophy with high skill weight (50%) and lower risk weight (15%). Aggressive but winning traders aren't penalized heavily.</p>
+            </div>
+        </section>
 
-<h2 id="overview">Overview</h2>
+        <section id="composite">
+            <h2>// COMPOSITE SCORE</h2>
+            
+            <h3>Your Overall Grade (0-100)</h3>
+            <p>Think of it like a GPA:</p>
+            <ul>
+                <li><strong style="color: var(--white)">90-100:</strong> Elite trader, definitely copy</li>
+                <li><strong style="color: var(--white)">70-89:</strong> Strong trader, likely profitable</li>
+                <li><strong style="color: var(--light-gray)">50-69:</strong> Average, proceed with caution</li>
+                <li><strong style="color: var(--gray)">Below 50:</strong> Avoid copying</li>
+            </ul>
 
-<h3>What Are We Measuring?</h3>
-<ul>
-  <li><strong>Skill (50%)</strong>: Prediction accuracy</li>
-  <li><strong>Risk Management (15%)</strong>: Bankroll discipline</li>
-  <li><strong>Bot Detection (15%)</strong>: Human vs automated behavior</li>
-  <li><strong>Legitimacy (20%)</strong>: Trustworthiness of track record</li>
-</ul>
+            <div class="formula">
+<strong>MATHEMATICAL FORMULA:</strong>
 
-<h3>Why These Weights?</h3>
-<p><strong>We prioritize winners.</strong></p>
-<ul>
-  <li>Skill matters most</li>
-  <li>Aggressive winners aren’t punished</li>
-  <li>New but strong traders get leniency</li>
-</ul>
+Composite Score = (0.50 × Skill) + (0.15 × Risk) + (0.15 × Bot) + (0.20 × Legitimacy)
 
-<hr />
+<strong>EXAMPLE:</strong>
+• Skill: 85
+• Risk: 60
+• Bot: 95
+• Legitimacy: 70
 
-<h2 id="composite-score">The Composite Score</h2>
+Composite = (0.50 × 85) + (0.15 × 60) + (0.15 × 95) + (0.20 × 70)
+          = 42.5 + 9.0 + 14.25 + 14.0
+          = <span style="color: var(--white)">79.75 → 80</span>
+            </div>
+        </section>
 
-<h3>Layman Explanation</h3>
-<ul>
-  <li>90–100: Elite</li>
-  <li>70–89: Strong</li>
-  <li>50–69: Average</li>
-  <li>&lt; 50: Avoid</li>
-</ul>
+        <section id="skill">
+            <h2>// SKILL SCORE (50% WEIGHT)</h2>
+            
+            <h3>What it measures: How accurately you predict market outcomes</h3>
 
-<h3>Formula</h3>
-<pre><code>Composite = (0.50 × Skill)
-          + (0.15 × Risk)
-          + (0.15 × Bot)
-          + (0.20 × Legitimacy)
-</code></pre>
+            <h4>A. BRIER SCORE (25% of Skill)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> Did your predictions match reality?</p>
+                <p>• Perfect prediction (bought Yes at 10¢, it won) = 100 points</p>
+                <p>• Bad prediction (bought Yes at 90¢, it lost) = 0 points</p>
+            </div>
+            <div class="formula">
+Brier Score = 1 - Average((prediction - outcome)²)
 
-<hr />
+Where:
+• prediction = the price you paid (e.g., 0.75 for 75¢)
+• outcome = 1 if your side won, 0 if it lost
 
-<h2 id="component-scores">Component Scores</h2>
+<strong>EXAMPLE:</strong>
+Trade 1: Bought Yes at 60¢ (0.60), market resolved Yes (1)
+  → (0.60 - 1)² = 0.16
 
-<h3>1. Skill Score (50%)</h3>
+Trade 2: Bought No at 30¢ (0.70 implied), market resolved No (1)
+  → (0.70 - 1)² = 0.09
 
-<h4>A. Brier Score (25%)</h4>
-<pre><code>Brier = 1 - Avg((prediction - outcome)²)
-</code></pre>
+Average Brier = (0.16 + 0.09) / 2 = 0.125
+Brier Score = (1 - 0.125) × 100 = <span style="color: var(--white)">87.5</span>
+            </div>
 
-<h4>B. Win Rate (35%)</h4>
-<pre><code>Win Rate = Wins / Total Trades
-</code></pre>
+            <h4>B. WIN RATE (35% of Skill)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> What percentage of your bets won?</p>
+            </div>
+            <div class="formula">
+Win Rate = (Number of Winning Trades / Total Trades) × 100
 
-<h4>C. Edge Consistency (20%)</h4>
-<pre><code>Edge = |price - 0.50|
-Consistency = (1 - StdDev / Mean) × 100
-</code></pre>
+<strong>EXAMPLE:</strong>
+10 trades total
+7 winners, 3 losers
 
-<h4>D. Market Difficulty (10%)</h4>
-<pre><code>Difficulty = Mean(1 - |price - 0.50|)
-</code></pre>
+Win Rate = (7 / 10) × 100 = <span style="color: var(--white)">70%</span>
 
-<h4>E. Early Entry (10%)</h4>
-<pre><code>Score based on % of market lifetime elapsed
-</code></pre>
+<strong>WHY IT'S IMPORTANT:</strong> Simple but powerful. Consistent winners are valuable.
+            </div>
 
-<h4>Final Skill Formula</h4>
-<pre><code>Skill = 0.25 × Brier
-      + 0.35 × WinRate
-      + 0.20 × EdgeConsistency
-      + 0.10 × Difficulty
-      + 0.10 × EarlyEntry
-</code></pre>
+            <h4>C. EDGE CONSISTENCY (20% of Skill)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> Do you consistently find good prices, or just get lucky sometimes?</p>
+                <p>Measures how often you buy at better-than-50/50 odds. Consistent edge = buying undervalued outcomes repeatedly.</p>
+            </div>
 
-<hr />
+            <h4>D. MARKET DIFFICULTY (10% of Skill)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> Bonus points for predicting hard markets (not just obvious ones).</p>
+                <p>Markets near 50/50 are harder to predict than 90/10 blowouts.</p>
+            </div>
 
-<h3>2. Risk Score (15%)</h3>
+            <h4>E. EARLY ENTRY (10% of Skill)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> Did you spot the opportunity before everyone else?</p>
+                <p>Bonus for entering when market is &lt;70% resolved. Penalty for last-minute entries (info advantage concern).</p>
+            </div>
 
-<h4>A. Sharpe Ratio</h4>
-<pre><code>Sharpe = Mean(Returns) / StdDev(Returns)
-</code></pre>
+            <div class="formula">
+<strong>FINAL SKILL SCORE CALCULATION:</strong>
 
-<h4>B. Max Drawdown</h4>
-<pre><code>Max Drawdown = Min((PnL - Peak) / Bankroll)
-</code></pre>
+Skill Score = (0.25 × Brier) + 
+              (0.35 × Win_Rate) + 
+              (0.20 × Edge_Consistency) + 
+              (0.10 × Difficulty) + 
+              (0.10 × Early_Entry)
+            </div>
+        </section>
 
-<h4>C. Kelly Criterion</h4>
-<pre><code>Kelly = (p × (b + 1) - 1) / b
-</code></pre>
+        <section id="risk">
+            <h2>// RISK SCORE (15% WEIGHT)</h2>
+            
+            <h3>What it measures: How well you manage your bankroll</h3>
 
-<h4>D. Streak Volatility</h4>
-<pre><code>Volatility = StdDev(Streaks) / Mean(Streaks)
-</code></pre>
+            <h4>A. SHARPE RATIO (30% of Risk)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> Are your returns consistent, or all over the place?</p>
+                <p>High returns with low volatility = good. High returns with wild swings = risky.</p>
+            </div>
+            <div class="formula">
+Sharpe Ratio = Mean(Returns) / StdDev(Returns)
+Sharpe Score = Min(100, (Sharpe / 2.0) × 100)
 
-<h4>Final Risk Formula</h4>
-<pre><code>Risk = 0.30 × Sharpe
-     + 0.30 × Drawdown
-     + 0.25 × Kelly
-     + 0.15 × StreakVolatility
-</code></pre>
+<strong>INTERPRETATION:</strong>
+• Sharpe > 2.0 = <span style="color: var(--white)">Excellent</span> (consistent profits)
+• Sharpe = 1.0 = <span style="color: var(--light-gray)">Good</span>
+• Sharpe < 0.5 = <span style="color: var(--gray)">Poor</span> (erratic)
+            </div>
 
-<hr />
+            <h4>B. MAXIMUM DRAWDOWN (30% of Risk)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> What's the worst losing streak you had?</p>
+                <p>Tracks your cumulative P&L and finds the biggest peak-to-trough drop.</p>
+            </div>
+            <div class="formula">
+<strong>INTERPRETATION:</strong>
+• < 10% drawdown = <span style="color: var(--white)">Excellent</span> (score 66+)
+• 10-20% = <span style="color: var(--light-gray)">Good</span>
+• > 30% = <span style="color: var(--gray)">Poor</span> (blew up account)
+            </div>
 
-<h3>3. Bot Score (15%)</h3>
+            <h4>C. KELLY CRITERION (25% of Risk)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> Are your bet sizes appropriate for your edge?</p>
+                <p>Kelly formula calculates optimal bet size. We penalize both overbetting (too risky) and underbetting (too timid).</p>
+            </div>
 
-<ul>
-  <li>Trade frequency</li>
-  <li>Hold time</li>
-  <li>Bet size uniformity</li>
-  <li>Round-number bias</li>
-</ul>
+            <h4>D. POSITION CONCENTRATION (15% of Risk)</h4>
+            <div class="highlight">
+                <p><strong>Layman:</strong> Do you put all your eggs in one basket?</p>
+                <p>Diversification reduces risk. We reward spreading bets across multiple markets.</p>
+            </div>
+        </section>
 
-<pre><code>Bot = 0.30 × Frequency
-    + 0.25 × HoldTime
-    + 0.20 × Uniformity
-    + 0.25 × RoundNumbers
-</code></pre>
+        <section id="bot">
+            <h2>// BOT DETECTION (15% WEIGHT)</h2>
+            
+            <h3>What it measures: Human vs Automated Trading Patterns</h3>
 
-<hr />
+            <div class="highlight">
+                <p>We look for patterns that distinguish human traders from bots:</p>
+                <ul>
+                    <li><strong>Trading frequency:</strong> Bots trade thousands of times per day</li>
+                    <li><strong>Hold duration:</strong> Bots flip positions in minutes/seconds</li>
+                    <li><strong>Session patterns:</strong> Humans take breaks, bots trade 24/7</li>
+                    <li><strong>Timing precision:</strong> Bots respond to events in milliseconds</li>
+                </ul>
+            </div>
 
-<h3>4. Legitimacy Score (20%)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>METRIC</th>
+                        <th>HUMAN PATTERN</th>
+                        <th>BOT PATTERN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Trades/Day</strong></td>
+                        <td>1-20</td>
+                        <td>100+</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hold Time</strong></td>
+                        <td>Hours to days</td>
+                        <td>Minutes to seconds</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Active Hours</strong></td>
+                        <td>8-16 hours/day</td>
+                        <td>20-24 hours/day</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Response Time</strong></td>
+                        <td>Minutes to hours</td>
+                        <td>Milliseconds to seconds</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-<ul>
-  <li>Account age</li>
-  <li>Sample size</li>
-  <li>Timing patterns</li>
-</ul>
+        <section id="legitimacy">
+            <h2>// LEGITIMACY (20% WEIGHT)</h2>
+            
+            <h3>What it measures: Is their track record trustworthy?</h3>
 
-<pre><code>Legitimacy = 0.30 × Age
-           + 0.30 × Sample
-           + 0.40 × Timing
-</code></pre>
+            <h4>A. ACCOUNT AGE (40% of Legitimacy)</h4>
+            <div class="highlight">
+                <p>New accounts are risky. Established accounts have proven themselves over time.</p>
+                <p>• 180+ days = <span style="color: var(--white)">Veteran</span> (100 points)</p>
+                <p>• 60-180 days = <span style="color: var(--light-gray)">Established</span> (70 points)</p>
+                <p>• < 60 days = <span style="color: var(--gray)">Newcomer</span> (penalty)</p>
+            </div>
 
-<hr />
+            <h4>B. SAMPLE SIZE (30% of Legitimacy)</h4>
+            <div class="highlight">
+                <p>More trades = more reliable statistics.</p>
+                <p>• 100+ markets = <span style="color: var(--white)">High confidence</span></p>
+                <p>• 50-100 markets = <span style="color: var(--light-gray)">Moderate confidence</span></p>
+                <p>• < 20 markets = <span style="color: var(--gray)">Low sample</span></p>
+            </div>
 
-<h2 id="classification-system">Classification System</h2>
+            <h4>C. TIMING PATTERNS (30% of Legitimacy)</h4>
+            <div class="highlight">
+                <p>Last-minute trades with high win rates suggest insider information.</p>
+                <p>We penalize traders who consistently enter right before resolution with suspiciously high accuracy.</p>
+            </div>
+        </section>
 
-<h3>ALPHA</h3>
-<ul>
-  <li>Composite ≥ 70</li>
-  <li>No red or yellow flags</li>
-</ul>
+        <section id="classification">
+            <h2>// CLASSIFICATION SYSTEM</h2>
+            
+            <div class="score-grid">
+                <div class="score-card">
+                    <span class="badge badge-alpha">ALPHA</span>
+                    <p>Composite ≥ 70</p>
+                    <p>Age ≥ 60 days</p>
+                    <p>Markets ≥ 50</p>
+                    <p>No red flags</p>
+                    <p><strong>Verdict: Copy-worthy</strong></p>
+                </div>
+                <div class="score-card">
+                    <span class="badge badge-risky">ALPHA_RISKY</span>
+                    <p>Composite ≥ 70</p>
+                    <p>Age ≥ 30 days</p>
+                    <p>Has yellow flags</p>
+                    <p><strong>Verdict: Copy with caution</strong></p>
+                </div>
+                <div class="score-card">
+                    <span class="badge badge-watch">WATCHLIST</span>
+                    <p>Composite ≥ 70</p>
+                    <p>BUT: Too new or low sample</p>
+                    <p><strong>Verdict: Monitor closely</strong></p>
+                </div>
+                <div class="score-card">
+                    <span class="badge badge-avoid">AVOID</span>
+                    <p>Composite < 70</p>
+                    <p>OR: Has red flags</p>
+                    <p><strong>Verdict: Do not copy</strong></p>
+                </div>
+            </div>
+        </section>
 
-<h3>ALPHA_RISKY</h3>
-<ul>
-  <li>Composite ≥ 70</li>
-  <li>Yellow flags present</li>
-</ul>
+        <section id="flags">
+            <h2>// FLAGS & WARNINGS</h2>
+            
+            <h3>RED FLAGS (Auto-Disqualify)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>FLAG</th>
+                        <th>MEANING</th>
+                        <th>THRESHOLD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="flag flag-red">INFO_ADVANTAGE</span></td>
+                        <td>Suspiciously accurate last-minute trades</td>
+                        <td>>50% late entries + >70% win rate</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag flag-red">BOT_HIGH_FREQUENCY</span></td>
+                        <td>Automated trading detected</td>
+                        <td>Bot score < 20</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag flag-red">BOT_SHORT_HOLDS</span></td>
+                        <td>Extremely short position durations</td>
+                        <td>Avg hold < 1 hour</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag flag-red">WASH_TRADING</span></td>
+                        <td>Self-trading to inflate volume</td>
+                        <td>Diversity score < 10</td>
+                    </tr>
+                </tbody>
+            </table>
 
-<h3>WATCHLIST</h3>
-<ul>
-  <li>Composite ≥ 50</li>
-  <li>Insufficient history</li>
-</ul>
+            <h3>YELLOW FLAGS (Warnings)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>FLAG</th>
+                        <th>MEANING</th>
+                        <th>THRESHOLD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="flag flag-yellow">EXTREME_DRAWDOWN</span></td>
+                        <td>Dangerous losing streaks</td>
+                        <td>Max drawdown > 30%</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag flag-yellow">POOR_POSITION_SIZING</span></td>
+                        <td>Aggressive over-betting</td>
+                        <td>Kelly score < 15</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag flag-yellow">NEW_WALLET</span></td>
+                        <td>Limited history</td>
+                        <td>Account < 30 days old</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag flag-yellow">LOW_SAMPLE</span></td>
+                        <td>Not enough data</td>
+                        <td>< 20 resolved markets</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-<h3>AVOID</h3>
-<ul>
-  <li>Composite &lt; 50</li>
-  <li>Any red flag</li>
-</ul>
+        <section id="examples">
+            <h2>// PRACTICAL EXAMPLES</h2>
+            
+            <div class="example">
+                <h4>EXAMPLE 1: ELITE TRADER (ALPHA)</h4>
+                <div class="formula">
+<strong>PROFILE:</strong>
+• Account age: 240 days
+• Markets traded: 127
+• Win rate: 68%
 
-<hr />
+<strong>SCORES:</strong>
+• Skill: 88 (excellent Brier, consistent edge)
+• Risk: 72 (minor drawdowns, good Kelly)
+• Bot: 95 (human patterns)
+• Legitimacy: 85 (established account)
 
-<h2 id="flags-warnings">Flags &amp; Warnings</h2>
+<strong>CALCULATION:</strong>
+Composite = (0.50 × 88) + (0.15 × 72) + (0.15 × 95) + (0.20 × 85)
+          = 44.0 + 10.8 + 14.25 + 17.0
+          = <span style="color: var(--white)">86</span>
 
-<h3>🔴 Red Flags</h3>
-<ul>
-  <li>High-frequency bot trading</li>
-  <li>Sub-30s hold times</li>
-  <li>Uniform bet sizing</li>
-  <li>24/7 activity</li>
-</ul>
+<strong>CLASSIFICATION:</strong> <span class="badge badge-alpha">ALPHA</span>
+<strong>FLAGS:</strong> None
+<strong>TRAITS:</strong> ELITE_PREDICTOR, DISCIPLINED_RISK, VETERAN, HIGH_VOLUME
 
-<h3>🟡 Yellow Flags</h3>
-<ul>
-  <li>Extreme drawdowns</li>
-  <li>Overbetting (low Kelly)</li>
-  <li>Late-entry accuracy</li>
-  <li>New or low-sample accounts</li>
-</ul>
+<strong>VERDICT: Strong copy candidate</strong>
+                </div>
+            </div>
 
-<hr />
+            <div class="example">
+                <h4>EXAMPLE 2: RISKY WINNER (ALPHA_RISKY)</h4>
+                <div class="formula">
+<strong>PROFILE:</strong>
+• Account age: 90 days
+• Markets traded: 55
+• Win rate: 74%
 
-<h2 id="behavioral-traits">Behavioral Traits</h2>
+<strong>SCORES:</strong>
+• Skill: 82 (high win rate, good Brier)
+• Risk: 38 (big drawdowns, over-bets)
+• Bot: 92 (human)
+• Legitimacy: 68 (newer account)
 
-<h3>Skill Traits</h3>
-<ul>
-  <li>ELITE_PREDICTOR</li>
-  <li>STRONG_EDGE</li>
-  <li>CONSISTENT_EDGE</li>
-</ul>
+<strong>CALCULATION:</strong>
+Composite = (0.50 × 82) + (0.15 × 38) + (0.15 × 92) + (0.20 × 68)
+          = 41.0 + 5.7 + 13.8 + 13.6
+          = <span style="color: var(--light-gray)">74</span>
 
-<h3>Risk Traits</h3>
-<ul>
-  <li>DISCIPLINED_RISK</li>
-  <li>AGGRESSIVE_RISK</li>
-  <li>OVERBETS</li>
-</ul>
+<strong>CLASSIFICATION:</strong> <span class="badge badge-risky">ALPHA_RISKY</span>
+<strong>FLAGS:</strong> <span class="flag flag-yellow">EXTREME_DRAWDOWN</span> <span class="flag flag-yellow">POOR_POSITION_SIZING</span>
+<strong>TRAITS:</strong> STRONG_EDGE, AGGRESSIVE_RISK, OVERBETS
 
-<h3>Activity Traits</h3>
-<ul>
-  <li>VETERAN</li>
-  <li>NEWCOMER</li>
-  <li>HIGH_VOLUME</li>
-</ul>
+<strong>VERDICT: High skill but risky style. Consider with lower position sizing.</strong>
+                </div>
+            </div>
 
-<hr />
+            <div class="example">
+                <h4>EXAMPLE 3: BOT ACCOUNT (AVOID)</h4>
+                <div class="formula">
+<strong>PROFILE:</strong>
+• Account age: 120 days
+• Markets traded: 8,432
+• Win rate: 51%
 
-<h2>Summary</h2>
-<p>
-Poly-Anal scores traders across skill, risk, bot likelihood, and legitimacy.
-Winners matter most. Bots and insiders are filtered aggressively.
-Everything is transparent and explainable.
-</p>
+<strong>SCORES:</strong>
+• Skill: 55 (mediocre)
+• Risk: 78 (tight risk control)
+• Bot: 12 (VERY suspicious)
+• Legitimacy: 62 (established but weird)
 
-<p><strong>Last Updated:</strong> January 12, 2026<br />
-<strong>Version:</strong> 2.0 (Tiered Flag System)</p>
+<strong>CALCULATION:</strong>
+Composite = (0.50 × 55) + (0.15 × 78) + (0.15 × 12) + (0.20 × 62)
+          = 27.5 + 11.7 + 1.8 + 12.4
+          = <span style="color: var(--gray)">53</span>
 
+<strong>CLASSIFICATION:</strong> <span class="badge badge-avoid">AVOID</span>
+<strong>FLAGS:</strong> <span class="flag flag-red">BOT_HIGH_FREQUENCY</span> <span class="flag flag-red">BOT_SHORT_HOLDS</span>
+
+<strong>VERDICT: Do not copy. This is an automated market-maker.</strong>
+                </div>
+            </div>
+
+            <div class="example">
+                <h4>EXAMPLE 4: INSIDE TRADER (AVOID)</h4>
+                <div class="formula">
+<strong>PROFILE:</strong>
+• Account age: 45 days
+• Markets traded: 22
+• Win rate: 86%
+
+<strong>SCORES:</strong>
+• Skill: 91 (suspiciously high)
+• Risk: 82 (perfect timing)
+• Bot: 88 (human)
+• Legitimacy: 15 (red flag on timing)
+
+<strong>CALCULATION:</strong>
+Composite = (0.50 × 91) + (0.15 × 82) + (0.15 × 88) + (0.20 × 15)
+          = 45.5 + 12.3 + 13.2 + 3.0
+          = <span style="color: var(--gray)">74</span>
+
+<strong>CLASSIFICATION:</strong> <span class="badge badge-avoid">AVOID</span> (despite high composite)
+<strong>FLAGS:</strong> <span class="flag flag-red">INFO_ADVANTAGE</span> (70% of trades are last-minute with 86% win rate)
+<strong>TRAITS:</strong> LATE_TRADER
+
+<strong>VERDICT: Too good to be true. Likely has insider information.</strong>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>// PHILOSOPHY & DESIGN</h2>
+            
+            <h3>Why We Prioritize Skill Over Risk</h3>
+            <div class="highlight">
+                <p>Traditional finance preaches "risk-adjusted returns." But prediction markets are different:</p>
+                <ul>
+                    <li><strong>Inefficient markets:</strong> Mispriced opportunities exist</li>
+                    <li><strong>Kelly betting:</strong> Aggressive sizing is optimal when you have edge</li>
+                    <li><strong>Short timeframes:</strong> Drawdowns are temporary, skill persists</li>
+                </ul>
+                <p><strong>OUR PHILOSOPHY:</strong> If someone wins 75% of the time, we don't care if they're aggressive. We care if they WIN.</p>
+            </div>
+
+            <h3>Why We're Lenient on New Accounts</h3>
+            <div class="highlight">
+                <p>Old scoring logic penalized new accounts too harshly. Elite traders with 85 skill scores were classified as AVOID just for being new.</p>
+                <p><strong>NEW APPROACH:</strong></p>
+                <ul>
+                    <li>High skill (≥85) + new account = ALPHA_RISKY (not AVOID)</li>
+                    <li>Let users decide if they trust limited sample sizes</li>
+                    <li>Yellow flags warn, but don't block</li>
+                </ul>
+            </div>
+
+            <h3>Core Principles</h3>
+            <ul>
+                <li><strong>Transparency over complexity:</strong> No black-box ML</li>
+                <li><strong>Prioritize winners:</strong> High skill weight (50%)</li>
+                <li><strong>Be lenient on risk:</strong> Aggressive ≠ bad if winning</li>
+                <li><strong>Give newcomers a chance:</strong> Yellow flags, not red</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>// SCORE INTERPRETATION</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>COMPOSITE SCORE</th>
+                        <th>GRADE</th>
+                        <th>MEANING</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background: rgba(255, 255, 255, 0.1);">
+                        <td><strong>90-100</strong></td>
+                        <td>A+</td>
+                        <td>Elite, institutional-quality</td>
+                    </tr>
+                    <tr style="background: rgba(255, 255, 255, 0.05);">
+                        <td><strong>80-89</strong></td>
+                        <td>A</td>
+                        <td>Excellent, strong copy candidate</td>
+                    </tr>
+                    <tr style="background: rgba(255, 255, 255, 0.03);">
+                        <td><strong>70-79</strong></td>
+                        <td>B+</td>
+                        <td>Good, profitable with caveats</td>
+                    </tr>
+                    <tr>
+                        <td><strong>60-69</strong></td>
+                        <td>B</td>
+                        <td>Above average, watchlist</td>
+                    </tr>
+                    <tr>
+                        <td><strong>50-59</strong></td>
+                        <td>C</td>
+                        <td>Average, high risk</td>
+                    </tr>
+                    <tr style="background: rgba(255, 0, 85, 0.1);">
+                        <td><strong>40-49</strong></td>
+                        <td>D</td>
+                        <td>Below average, avoid</td>
+                    </tr>
+                    <tr style="background: rgba(255, 0, 85, 0.2);">
+                        <td><strong>0-39</strong></td>
+                        <td>F</td>
+                        <td>Losing money or bot</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>// FAQ</h2>
+            
+            <h4>Q: Why don't you use machine learning?</h4>
+            <p><strong>A:</strong> Transparency. Every score is explainable. You can see WHY someone got 82 vs 75. ML models are black boxes.</p>
+
+            <h4>Q: Can I game the system?</h4>
+            <p><strong>A:</strong> We've tried. The bot detection catches most manipulation. And if you have high skill legitimately, you'll score well anyway.</p>
+
+            <h4>Q: What if I'm a new trader with no history?</h4>
+            <p><strong>A:</strong> Make 20+ good trades over 30+ days. If you maintain 70%+ win rate, you'll hit WATCHLIST. Prove yourself for 60 days and 50 markets to reach ALPHA.</p>
+
+            <h4>Q: What's a "good" win rate?</h4>
+            <p><strong>A:</strong> 60%+ is very good (equivalent to 70+ skill score). 70%+ is elite. 50-60% is average.</p>
+        </section>
+
+        <footer style="text-align: center; padding: 40px; border-top: 4px solid var(--green); margin-top: 40px;">
+            <p style="font-size: 1.5rem; font-weight: 900; color: var(--green);">POLY-ANAL SCORING v2.0</p>
+            <p style="color: var(--white); margin-top: 10px;">LAST UPDATED: JANUARY 12, 2026</p>
+            <p style="color: var(--blue); margin-top: 20px;">TIERED FLAG SYSTEM</p>
+        </footer>
+    </div>
+
+    <script>
+        // Scroll indicator
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrolled = window.scrollY;
+            const percentage = (scrolled / documentHeight) * 100;
+            document.getElementById('scrollIndicator').style.width = percentage + '%';
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
 </body>
 </html>
