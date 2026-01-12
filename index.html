@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Poly-Anal Scoring System Explained</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+<h1>🎯 Poly-Anal Scoring System Explained</h1>
+<p><strong>A complete guide to how we evaluate prediction market traders</strong></p>
+
+<hr />
+
+<h2>Table of Contents</h2>
+<ol>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#composite-score">The Composite Score</a></li>
+  <li><a href="#component-scores">Component Scores</a></li>
+  <li><a href="#classification-system">Classification System</a></li>
+  <li><a href="#flags-warnings">Flags &amp; Warnings</a></li>
+  <li><a href="#behavioral-traits">Behavioral Traits</a></li>
+</ol>
+
+<hr />
+
+<h2 id="overview">Overview</h2>
+
+<h3>What Are We Measuring?</h3>
+<ul>
+  <li><strong>Skill (50%)</strong>: Prediction accuracy</li>
+  <li><strong>Risk Management (15%)</strong>: Bankroll discipline</li>
+  <li><strong>Bot Detection (15%)</strong>: Human vs automated behavior</li>
+  <li><strong>Legitimacy (20%)</strong>: Trustworthiness of track record</li>
+</ul>
+
+<h3>Why These Weights?</h3>
+<p><strong>We prioritize winners.</strong></p>
+<ul>
+  <li>Skill matters most</li>
+  <li>Aggressive winners aren’t punished</li>
+  <li>New but strong traders get leniency</li>
+</ul>
+
+<hr />
+
+<h2 id="composite-score">The Composite Score</h2>
+
+<h3>Layman Explanation</h3>
+<ul>
+  <li>90–100: Elite</li>
+  <li>70–89: Strong</li>
+  <li>50–69: Average</li>
+  <li>&lt; 50: Avoid</li>
+</ul>
+
+<h3>Formula</h3>
+<pre><code>Composite = (0.50 × Skill)
+          + (0.15 × Risk)
+          + (0.15 × Bot)
+          + (0.20 × Legitimacy)
+</code></pre>
+
+<hr />
+
+<h2 id="component-scores">Component Scores</h2>
+
+<h3>1. Skill Score (50%)</h3>
+
+<h4>A. Brier Score (25%)</h4>
+<pre><code>Brier = 1 - Avg((prediction - outcome)²)
+</code></pre>
+
+<h4>B. Win Rate (35%)</h4>
+<pre><code>Win Rate = Wins / Total Trades
+</code></pre>
+
+<h4>C. Edge Consistency (20%)</h4>
+<pre><code>Edge = |price - 0.50|
+Consistency = (1 - StdDev / Mean) × 100
+</code></pre>
+
+<h4>D. Market Difficulty (10%)</h4>
+<pre><code>Difficulty = Mean(1 - |price - 0.50|)
+</code></pre>
+
+<h4>E. Early Entry (10%)</h4>
+<pre><code>Score based on % of market lifetime elapsed
+</code></pre>
+
+<h4>Final Skill Formula</h4>
+<pre><code>Skill = 0.25 × Brier
+      + 0.35 × WinRate
+      + 0.20 × EdgeConsistency
+      + 0.10 × Difficulty
+      + 0.10 × EarlyEntry
+</code></pre>
+
+<hr />
+
+<h3>2. Risk Score (15%)</h3>
+
+<h4>A. Sharpe Ratio</h4>
+<pre><code>Sharpe = Mean(Returns) / StdDev(Returns)
+</code></pre>
+
+<h4>B. Max Drawdown</h4>
+<pre><code>Max Drawdown = Min((PnL - Peak) / Bankroll)
+</code></pre>
+
+<h4>C. Kelly Criterion</h4>
+<pre><code>Kelly = (p × (b + 1) - 1) / b
+</code></pre>
+
+<h4>D. Streak Volatility</h4>
+<pre><code>Volatility = StdDev(Streaks) / Mean(Streaks)
+</code></pre>
+
+<h4>Final Risk Formula</h4>
+<pre><code>Risk = 0.30 × Sharpe
+     + 0.30 × Drawdown
+     + 0.25 × Kelly
+     + 0.15 × StreakVolatility
+</code></pre>
+
+<hr />
+
+<h3>3. Bot Score (15%)</h3>
+
+<ul>
+  <li>Trade frequency</li>
+  <li>Hold time</li>
+  <li>Bet size uniformity</li>
+  <li>Round-number bias</li>
+</ul>
+
+<pre><code>Bot = 0.30 × Frequency
+    + 0.25 × HoldTime
+    + 0.20 × Uniformity
+    + 0.25 × RoundNumbers
+</code></pre>
+
+<hr />
+
+<h3>4. Legitimacy Score (20%)</h3>
+
+<ul>
+  <li>Account age</li>
+  <li>Sample size</li>
+  <li>Timing patterns</li>
+</ul>
+
+<pre><code>Legitimacy = 0.30 × Age
+           + 0.30 × Sample
+           + 0.40 × Timing
+</code></pre>
+
+<hr />
+
+<h2 id="classification-system">Classification System</h2>
+
+<h3>ALPHA</h3>
+<ul>
+  <li>Composite ≥ 70</li>
+  <li>No red or yellow flags</li>
+</ul>
+
+<h3>ALPHA_RISKY</h3>
+<ul>
+  <li>Composite ≥ 70</li>
+  <li>Yellow flags present</li>
+</ul>
+
+<h3>WATCHLIST</h3>
+<ul>
+  <li>Composite ≥ 50</li>
+  <li>Insufficient history</li>
+</ul>
+
+<h3>AVOID</h3>
+<ul>
+  <li>Composite &lt; 50</li>
+  <li>Any red flag</li>
+</ul>
+
+<hr />
+
+<h2 id="flags-warnings">Flags &amp; Warnings</h2>
+
+<h3>🔴 Red Flags</h3>
+<ul>
+  <li>High-frequency bot trading</li>
+  <li>Sub-30s hold times</li>
+  <li>Uniform bet sizing</li>
+  <li>24/7 activity</li>
+</ul>
+
+<h3>🟡 Yellow Flags</h3>
+<ul>
+  <li>Extreme drawdowns</li>
+  <li>Overbetting (low Kelly)</li>
+  <li>Late-entry accuracy</li>
+  <li>New or low-sample accounts</li>
+</ul>
+
+<hr />
+
+<h2 id="behavioral-traits">Behavioral Traits</h2>
+
+<h3>Skill Traits</h3>
+<ul>
+  <li>ELITE_PREDICTOR</li>
+  <li>STRONG_EDGE</li>
+  <li>CONSISTENT_EDGE</li>
+</ul>
+
+<h3>Risk Traits</h3>
+<ul>
+  <li>DISCIPLINED_RISK</li>
+  <li>AGGRESSIVE_RISK</li>
+  <li>OVERBETS</li>
+</ul>
+
+<h3>Activity Traits</h3>
+<ul>
+  <li>VETERAN</li>
+  <li>NEWCOMER</li>
+  <li>HIGH_VOLUME</li>
+</ul>
+
+<hr />
+
+<h2>Summary</h2>
+<p>
+Poly-Anal scores traders across skill, risk, bot likelihood, and legitimacy.
+Winners matter most. Bots and insiders are filtered aggressively.
+Everything is transparent and explainable.
+</p>
+
+<p><strong>Last Updated:</strong> January 12, 2026<br />
+<strong>Version:</strong> 2.0 (Tiered Flag System)</p>
+
+</body>
+</html>
